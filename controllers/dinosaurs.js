@@ -45,4 +45,18 @@ router.post('/', (req, res)=>{
     res.redirect('/dinosaurs')
 })
 
+router.delete('/:idx', (req, res)=>{
+    let dinosaurs = fs.readFileSync('./dinosaurs.json')
+    dinoData = JSON.parse(dinosaurs)
+
+    // remove the deleted dinosaur from the dinosaurs array
+    dinoData.splice(req.params.idx, 1)
+
+    // save the new dinosaurs to the data.json file
+    fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinoData))
+
+    // redirect back to same page so we see the updated list of dinos
+    res.redirect('/dinosaurs')
+})
+
 module.exports = router
