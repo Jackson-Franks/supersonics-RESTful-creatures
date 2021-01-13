@@ -1,0 +1,8 @@
+<ul>
+    <% myCreatures.forEach(c=>{ %>
+        <li>
+            <%= c.type %>
+            <img src="<%= c.img_url %>" alt="<%= c.type %>">
+        </li>
+    <% }) %>
+</ul>
