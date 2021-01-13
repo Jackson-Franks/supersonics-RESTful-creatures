@@ -1,3 +1,4 @@
+const { EDESTADDRREQ } = require('constants')
 const express = require('express')
 const router = express.Router()
 const fs = require('fs')
@@ -14,6 +15,20 @@ router.get('/', (req, res)=>{
 // get new dino form
 router.get('/new', (req, res)=>{
     res.render('dinosaurs/new.ejs')
+})
+
+router.get('/edit/:idx', (req, res)=>{
+    // get dinosaur data from json file
+    let dinosaurs = fs.readFileSync('./dinosaurs.json')
+    let dinoData = JSON.parse(dinosaurs)
+
+    // get array index from url parameter
+    let dinoIndex = req.params.idx
+
+    res.render('dinosaurs/edit.ejs', {
+        myDino: dinoData[dinoIndex], 
+        dinoIdx: dinoIndex
+    })
 })
 
 // show route
@@ -56,6 +71,19 @@ router.delete('/:idx', (req, res)=>{
     fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinoData))
 
     // redirect back to same page so we see the updated list of dinos
+    res.redirect('/dinosaurs')
+})
+
+router.put('/:idx', (req, res)=>{
+    let dinosaurs = fs.readFileSync('./dinosaurs.json')
+    let dinoData = JSON.parse(dinosaurs)
+
+    dinoData[req.params.idx].name = req.body.name
+    dinoData[req.params.idx].type = req.body.type
+
+    // save the editted dinosaurs to the json file
+    fs.writeFileSync('./dinosaurs.json', JSON.stringify(dinoData))
+
     res.redirect('/dinosaurs')
 })
 
